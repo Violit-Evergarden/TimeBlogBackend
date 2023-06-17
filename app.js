@@ -12,6 +12,9 @@ const history=require('connect-history-api-fallback')
 app.use(history())
 
 
+app.use('/userimg',express.static('userimg'))
+
+
 //导入并配置cors中间件（解决跨域问题）
 const cors=require('cors')
 app.use(cors())
@@ -27,6 +30,7 @@ app.use((req,res,next)=>{
       status,
       massage:err instanceof Error?err.message:err
     })
+    err && console.log(err)
   }
   next()
 })
@@ -35,7 +39,7 @@ app.use((req,res,next)=>{
 //一定要在路由之前配置解新token的中间件
 const expressJwt=require('express-jwt')
 const config=require('./config')
-app.use(expressJwt({secret:config.jwtSecretKey}).unless({path:[/^\/api/]}))
+app.use(expressJwt({secret:config.jwtSecretKey}).unless({path:[/^\/api/,/^\/userimg/]}))
 
 //导入并使用登录注册路由模块
 const userRouter=require('./router/user')
